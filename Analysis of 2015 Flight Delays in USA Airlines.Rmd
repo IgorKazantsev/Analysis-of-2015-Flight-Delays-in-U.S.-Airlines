@@ -1,0 +1,50 @@
+```{r}
+flights = read.csv("flights_cleaned.csv", dec = ".",stringsAsFactors = TRUE)
+```
+
+## Regressioonanalüüs
+
+Regressioonanalüüsi käigus testime hüpoteesi kuu (MONTH) mõju kohta lennu hilinemise kestusele (ARRIVAL_DELAY).
+
+```{r}
+table(flights$MONTH)
+```
+
+## Tööhüpotees 3
+
+Tööhüpotees: Suvekuudel — eriti juunis ja juulis — on lennureiside keskmine hilinemisaeg pikem kui teistel kuudel. See võib olla seotud reisijate arvu suurenemise ja lennujaamade suurema koormusega puhkusehooajal.
+
+## Mudeli ehitamine
+
+Lineaarseose kohta hüpoteesi kontrollimiseks konstrueerime ühe argumendiga kuu (MONTH) lineaarse mudeli tunnuse Y = ARRIVAL_DELAY väärtuste prognoosimiseks:
+
+
+```{r}
+model_month <- lm(ARRIVAL_DELAY ~ MONTH, data = flights)
+summary(model_month)
+
+```
+Mudeli olulisuse p-väärtus on väga väike (p-value < 0.00000000000000022), mis tähendab, et kuu mõju on statistiliselt oluline. Seega on kuudel oluline mõju modelleeritavale tunnusele ning kuu tuleks mudelis arvesse võtta.
+
+```{r}
+library(ggplot2)
+
+ggplot(flights, aes(x = factor(MONTH), y = ARRIVAL_DELAY)) +
+  stat_summary(fun = mean, geom = "bar", fill = "steelblue") +
+  labs(title = "Keskmine saabumise hilinemine kuude lõikes",
+       x = "Kuu", y = "Keskmine hilinemine (minutit)") +
+  theme_minimal()
+
+```
+## Kokkuvõte
+
+Nagu näha, on suvekuudel reiside hilinemised tõepoolest veidi suuremad, kuigi mitte märkimisväärselt. Sama kehtib ka detsembri kohta, mil samuti on populaarsed puhkused. Seetõttu võib järeldada, et lennujaamade suurem koormus suvel ja detsembris mõjutab lendude hilinemist küll veidi, kuid mitte oluliselt.
+
+
+
+
+
+
+
+
+
